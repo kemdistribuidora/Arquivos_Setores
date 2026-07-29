@@ -26,7 +26,6 @@
       --shadow-sm:    0 1px 3px rgba(0,0,0,.05);
       --shadow-md:    0 6px 20px rgba(0,0,0,.08);
       
-      /* Cores semânticas dos setores refinadas */
       --c-log-bg: #FFF8E1; --c-log-txt: #B78103;
       --c-com-bg: #F5F5F7; --c-com-txt: #455A64;
       --c-fat-bg: #E3F2FD; --c-fat-txt: #1E88E5;
@@ -101,7 +100,6 @@
       flex-shrink: 0;
     }
     
-    /* Mapeamento cromático minimalista dos ícones */
     .icon-log { background: var(--c-log-bg); color: var(--c-log-txt); }
     .icon-com { background: var(--c-com-bg); color: var(--c-com-txt); }
     .icon-fat { background: var(--c-fat-bg); color: var(--c-fat-txt); }
@@ -127,7 +125,6 @@
     }
     .sector.open .chevron { transform: rotate(180deg); color: var(--text-2); }
 
-    /* ── Gaveta de Conteúdo ──────────────────────── */
     .sector-body {
       display: none;
       padding: 18px;
@@ -423,12 +420,14 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ── Configuração da API ───────────────────────────────────
+const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzOrVxYQvlC7dMyG4H2kqJfhyuTqw4pk6AGVZEMxghVzE2EOT5oEA5W0d0zV6-5jMiV0g/exec";
+
 // ── Estado do Aplicativo ──────────────────────────────────
 let dados = {};
 let setorAtivo = null;
 let setoresAbertos = new Set();
 
-// Dicionário de ícones e mapeamento de estilos de cor
 const META = {
   "Transporte": { icon: "ti-truck", cls: "icon-log" },
   "Operacional": { icon: "ti-settings", cls: "icon-com" },
@@ -439,14 +438,24 @@ const META = {
   "ADM": { icon: "ti-building-skyscraper", cls: "icon-com" }
 };
 
+// ── Motor de Comunicação com o Back ───────────────────────
+async function chamarAPI(action, paramData = {}) {
+  const response = await fetch(URL_APPS_SCRIPT, {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action: action, data: paramData })
+  });
+  return await response.json();
+}
+
 // ── Ciclo de Inicialização ────────────────────────────────
 window.addEventListener('DOMContentLoaded', carregarDados);
 
 function carregarDados() {
-  google.script.run
-    .withSuccessHandler(onDadosCarregados)
-    .withFailureHandler(onErro)
-    .getTodasPlanilhas();
+  chamarAPI('getTodasPlanilhas')
+    .then(onDadosCarregados)
+    .catch(onErro);
 }
 
 function onDadosCarregados(resultado) {
@@ -520,7 +529,6 @@ function cardHTML(p) {
   `;
 }
 
-// ── Controle das Gavetas (Collapse) ───────────────────────
 function toggleSetor(setor) {
   if (setoresAbertos.has(setor)) {
     setoresAbertos.delete(setor);
@@ -531,7 +539,6 @@ function toggleSetor(setor) {
   if (el) el.classList.toggle('open');
 }
 
-// ── Controle de Modais ────────────────────────────────────
 function abrirModal(setor) {
   document.getElementById('inp-pass').value = '';
   setorAtivo = setor;
@@ -553,34 +560,32 @@ function handleModalBg(e) {
   if (e.target === document.getElementById('modal')) fecharModal();
 }
 
-// ── Persistência de Dados (Criar) ─────────────────────────
 function salvarPlanilha() {
   const nome  = document.getElementById('inp-name').value.trim();
   const url   = document.getElementById('inp-url').value.trim();
   const desc  = document.getElementById('inp-desc').value.trim();
   const senha = document.getElementById('inp-pass').value.trim();
 
-  if (!nome) {
-    mostrarToast('⚠️ Defina um nome para a planilha.');
-    return;
-  }
-  if (!url || !url.startsWith('http')) {
-    mostrarToast('⚠️ Insira uma URL válida do Google Sheets.');
-    return;
-  }
-  if (!senha || senha.length < 4) {
-    mostrarToast('⚠️ A senha de segurança deve conter no mínimo 4 caracteres.');
-    return;
-  }
+  if (!nome) return mostrarToast('⚠️ Defina um nome para a planilha.');
+  if (!url || !url.startsWith('http')) return mostrarToast('⚠️ Insira uma URL válida do Google Sheets.');
+  if (!senha || senha.length < 4) return mostrarToast('⚠️ A senha de segurança deve conter no mínimo 4 caracteres.');
 
   const btn = document.getElementById('btn-save');
   btn.disabled = true;
   btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Salvando…';
 
-  google.script.run
-    .withSuccessHandler(onSalvo)
-    .withFailureHandler(onErro)
-    .adicionarPlanilha(setorAtivo, nome, url, desc, senha);
+  chamarAPI('adicionarPlanilha', {
+    setor: setorAtivo,
+    nome: nome,
+    url: url,
+    descricao: desc,
+    senha: senha
+  })
+  .then(res => {
+    if (res && res.error) throw new Error(res.error);
+    onSalvo(res);
+  })
+  .catch(onErro);
 }
 
 function onSalvo(res) {
@@ -589,7 +594,6 @@ function onSalvo(res) {
   carregarDados();
 }
 
-// ── Exclusão de Itens ─────────────────────────────────────
 let idRemocao = null;
 
 function confirmarRemocao(id) {
@@ -610,25 +614,22 @@ function handleRemoveBg(e) {
 
 function removerConfirmado() {
   const senha = document.getElementById('remove-pass').value.trim();
-  if (!senha) {
-    mostrarToast('⚠️ Digite a senha para confirmar a exclusão.');
-    return;
-  }
+  if (!senha) return mostrarToast('⚠️ Digite a senha para confirmar a exclusão.');
 
-  google.script.run
-    .withSuccessHandler(() => {
-      fecharRemove();
-      mostrarToast('🗑️ Planilha removida permanentemente.');
-      carregarDados();
+  chamarAPI('removerPlanilha', { id: idRemocao, senha: senha })
+    .then(res => {
+      if (res && res.error) {
+        mostrarToast('❌ ' + res.error);
+      } else {
+        fecharRemove();
+        mostrarToast('🗑️ Planilha removida permanentemente.');
+        carregarDados();
+      }
     })
-    .withFailureHandler(onErro)
-    .removerPlanilha(idRemocao, senha);
+    .catch(onErro);
 }
 
-// ── Utilitários Auxiliares ────────────────────────────────
-function abrirLink(url) {
-  window.open(url, '_blank');
-}
+function abrirLink(url) { window.open(url, '_blank'); }
 
 function esc(str) {
   return String(str || '')
