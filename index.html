@@ -1,47 +1,38 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <base target="_top">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agendamento de Entregas</title>
-  <link rel="icon" type="image/png" href="imagens/icone.png?v=2">
-
-  <!-- Estilo e Fontes Padrão da Segunda Tela -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel de Planilhas</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
   <style>
-    /* ── Reset & Base (Padrão Corporativo) ─────────────────── */
+    /* ── Reset & Base Corporativo ─────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --brand:        #024a70; /* Cor identificadora da KEM adaptada ao novo padrão */
-      --brand-dark:   #002a44;
-      --brand-light:  #e8f1f8;
+      --green:        #0F9D58;
+      --green-dark:   #0d8a4f;
+      --green-light:  #E8F5E9;
       --bg:           #F5F5F5;
       --surface:      #FFFFFF;
       --surface2:     #FAFAFA;
-      --border:       rgba(0,0,0,.10);
-      --border-med:   rgba(0,0,0,.18);
+      --border:       rgba(0,0,0,.08);
+      --border-med:   rgba(0,0,0,.15);
       --text:         #1C1C1E;
       --text-2:       #5F5E5A;
       --text-3:       #9E9D99;
       --radius-md:    8px;
       --radius-lg:    12px;
-      --shadow-sm:    0 1px 3px rgba(0,0,0,.08);
-      --shadow-md:    0 4px 16px rgba(0,0,0,.10);
+      --shadow-sm:    0 1px 3px rgba(0,0,0,.05);
+      --shadow-md:    0 6px 20px rgba(0,0,0,.08);
       
-      --danger:       #E53935;
-      --danger-light: #FFEBEE;
-      --success:      #0F9D58;
-      --success-light:#E8F5E9;
-      --warning:      #F57C00;
-      --warning-light:#FFF3E0;
+      /* Cores semânticas dos setores refinadas */
+      --c-log-bg: #FFF8E1; --c-log-txt: #B78103;
+      --c-com-bg: #F5F5F7; --c-com-txt: #455A64;
+      --c-fat-bg: #E3F2FD; --c-fat-txt: #1E88E5;
+      --c-rh-bg:  #F3E5F5; --c-rh-txt:  #8E24AA;
+      --c-cmr-bg: #E8F5E9; --c-cmr-txt: #2E7D32;
+      --c-fin-bg: #E0F2F1; --c-fin-txt: #00796B;
     }
 
     body {
@@ -49,8 +40,7 @@
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ── Header ──────────────────────────────────── */
@@ -60,746 +50,608 @@
       padding: 16px 24px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
       position: sticky;
       top: 0;
       z-index: 50;
       box-shadow: var(--shadow-sm);
     }
     
-    .brand-logo {
-      height: 38px;
-      width: auto;
-      display: block;
-    }
-
-    .header-info h1 { font-size: 16px; font-weight: 600; }
-    .header-info p  { font-size: 12px; color: var(--text-2); margin-top: 2px; }
-
-    /* ── Layout Principal ─────────────────────────── */
-    .main {
-      flex: 1;
-      width: 100%;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 24px 20px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(340px, 480px);
-      gap: 24px;
-      align-items: start;
-    }
-
-    /* ── Lateral Informativa (Intro) ───────────────── */
-    .intro { padding: 8px 0; }
-    
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--brand-light);
-      color: var(--brand-dark);
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
-
-    .intro h2 {
-      margin-top: 14px;
-      font-size: 28px;
-      font-weight: 600;
-      line-height: 1.2;
-      color: var(--text);
-    }
-
-    .intro p {
-      margin-top: 10px;
-      color: var(--text-2);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .support-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .support-item {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
+    .header-logo {
+      width: 36px; height: 36px;
+      background: var(--green-light);
       border-radius: var(--radius-md);
-      padding: 12px;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      font-size: 13px;
-      color: var(--text-2);
-      box-shadow: var(--shadow-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--green); font-size: 20px;
     }
+    
+    .header-info h1 { font-size: 16px; font-weight: 600; }
+    .header-info p  { font-size: 12px; color: var(--text-2); margin-top: 1px; }
 
-    .support-item i {
-      font-size: 18px;
-      color: var(--brand);
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
+    /* ── Main & Setores ──────────────────────────── */
+    .main { padding: 24px 20px; max-width: 960px; margin: 0 auto; }
 
-    /* ── Card do Formulário ───────────────────────── */
-    .card {
+    .sector {
       background: var(--surface);
       border: 0.5px solid var(--border);
       border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
-      padding: 24px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .2s ease, border-color .2s ease;
     }
+    .sector.open { box-shadow: var(--shadow-md); border-color: var(--border-med); }
 
-    /* ── Steps / Indicadores de Etapa ─────────────── */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 24px;
+    .sector-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      cursor: pointer;
+      user-select: none;
+      transition: background .15s ease;
     }
+    .sector-header:hover { background: var(--surface2); }
 
-    .step {
-      border: 0.5px solid var(--border-med);
+    .sector-icon {
+      width: 36px; height: 36px;
       border-radius: var(--radius-md);
-      padding: 8px;
-      color: var(--text-3);
-      background: var(--surface2);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .step-num {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--border-med);
-      color: var(--text-3);
-      font-size: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
       flex-shrink: 0;
     }
+    
+    /* Mapeamento cromático minimalista dos ícones */
+    .icon-log { background: var(--c-log-bg); color: var(--c-log-txt); }
+    .icon-com { background: var(--c-com-bg); color: var(--c-com-txt); }
+    .icon-fat { background: var(--c-fat-bg); color: var(--c-fat-txt); }
+    .icon-rh  { background: var(--c-rh-bg);  color: var(--c-rh-txt); }
+    .icon-cmr { background: var(--c-cmr-bg); color: var(--c-cmr-txt); }
+    .icon-fin { background: var(--c-fin-bg); color: var(--c-fin-txt); }
 
-    .step.active { border-color: var(--brand); background: var(--brand-light); color: var(--brand-dark); }
-    .step.active .step-num { background: var(--brand); color: #fff; }
-    .step.done { border-color: var(--success); background: var(--success-light); color: var(--success); }
-    .step.done .step-num { background: var(--success); color: #fff; }
-
-    /* ── Elementos de Formulário ───────────────────── */
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
-    .section-title i { color: var(--brand); font-size: 18px; }
-
-    .form-group { margin-bottom: 14px; }
-
-    label {
+    .sector-name  { font-size: 14px; font-weight: 600; flex: 1; color: var(--text); }
+    
+    .sector-badge {
       font-size: 11px;
+      background: var(--green-light);
+      color: var(--green-dark);
+      padding: 3px 9px;
+      border-radius: 99px;
+      font-weight: 600;
+    }
+    
+    .chevron {
+      font-size: 16px;
+      color: var(--text-3);
+      transition: transform .2s ease;
+    }
+    .sector.open .chevron { transform: rotate(180deg); color: var(--text-2); }
+
+    /* ── Gaveta de Conteúdo ──────────────────────── */
+    .sector-body {
+      display: none;
+      padding: 18px;
+      background: var(--surface2);
+      border-top: 0.5px solid var(--border);
+    }
+    .sector.open .sector-body { display: block; }
+
+    /* ── Grid de Cards ───────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .15s ease, border-color .15s ease, transform .15s ease;
+    }
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-med);
+      transform: translateY(-1px);
+    }
+
+    .card-top { display: flex; gap: 10px; align-items: flex-start; }
+    
+    .card-gs-icon {
+      width: 26px; height: 26px;
+      flex-shrink: 0;
+      background: url("https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico") center/cover;
+      border-radius: 4px;
+    }
+    
+    .card-title {
+      font-size: 13px; font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      word-break: break-word;
+    }
+    
+    .card-desc {
+      font-size: 11px;
+      color: var(--text-2);
+      line-height: 1.4;
+    }
+    
+    .card-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; }
+
+    /* ── Botões ──────────────────────────────────── */
+    .btn-open {
+      flex: 1;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background .15s ease;
+    }
+    .btn-open:hover { background: var(--green-dark); }
+
+    .btn-del {
+      background: none;
+      border: 0.5px solid var(--border-med);
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text-3);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .15s ease, color .15s ease, background .15s ease;
+    }
+    .btn-del:hover { border-color: #E53935; color: #E53935; background: #FFEBEE; }
+
+    .btn-add {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      border: 0.5px dashed var(--border-med);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      background: var(--surface);
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-2);
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 4px;
+      cursor: pointer;
+      transition: background .15s ease, color .15s ease, border-color .15s ease;
+      font-family: inherit;
+    }
+    .btn-add:hover {
+      background: var(--green-light);
+      color: var(--green-dark);
+      border-color: var(--green);
     }
 
-    input, select {
+    .empty-state {
+      text-align: center;
+      padding: 24px 0;
+      color: var(--text-3);
+      font-size: 13px;
+    }
+    .empty-state i { font-size: 32px; display: block; margin-bottom: 8px; color: var(--text-3); }
+
+    /* ── Modais ──────────────────────────────────── */
+    .modal-bg {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(2px);
+      display: none; align-items: center; justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+    .modal-bg.show { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 0.5px solid var(--border-med);
+      padding: 24px;
+      width: 420px; max-width: 100%;
+      box-shadow: var(--shadow-md);
+      animation: pop .2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes pop {
+      from { opacity: 0; transform: scale(.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header { margin-bottom: 18px; }
+    .modal-header h2 { font-size: 16px; font-weight: 600; color: var(--text); }
+    .modal-header p  { font-size: 12px; color: var(--text-2); margin-top: 2px; font-weight: 500; }
+
+    .field { margin-bottom: 14px; }
+    .field label {
+      font-size: 11px; font-weight: 600;
+      color: var(--text-2); letter-spacing: .04em; text-transform: uppercase;
+      display: block; margin-bottom: 6px;
+    }
+    .field input {
       width: 100%;
-      padding: 9px 11px;
+      padding: 10px 12px;
       border: 0.5px solid var(--border-med);
       border-radius: var(--radius-md);
       font-size: 13px;
       font-family: inherit;
       color: var(--text);
       background: var(--surface2);
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .field input:focus {
       outline: none;
-      transition: border-color .15s, box-shadow .15s;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--brand);
+      border-color: var(--green);
       background: var(--surface);
-      box-shadow: 0 0 0 3px rgba(2, 74, 112, .12);
+      box-shadow: 0 0 0 3px rgba(15,157,88,.12);
     }
+    .field input::placeholder { color: var(--text-3); }
 
-    input::placeholder { color: var(--text-3); }
-    select:disabled { color: var(--text-3); cursor: not-allowed; }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    .helper-text {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+    
+    .btn-cancel {
+      flex: 1;
+      border: 0.5px solid var(--border-med);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      background: none;
+      font-size: 13px; font-family: inherit; font-weight: 600;
       color: var(--text-2);
-      font-size: 11px;
-      margin-top: 6px;
-    }
-    .helper-text i { font-size: 14px; color: var(--brand); }
-
-    /* ── Área de Upload Padrão ────────────────────── */
-    .upload-area {
-      position: relative;
-      border: 0.5px dashed var(--border-med);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      text-align: center;
-      background: var(--surface2);
       cursor: pointer;
-      display: grid;
-      place-items: center;
-      transition: background .15s, border-color .15s;
+      transition: background .15s ease;
     }
+    .btn-cancel:hover { background: var(--surface2); }
 
-    .upload-area:hover { border-color: var(--brand); background: var(--brand-light); }
-    .upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-    .upload-area .upload-icon { color: var(--brand); font-size: 24px; margin-bottom: 6px; }
-    .upload-area .label-main { color: var(--text); font-size: 13px; font-weight: 600; }
-    .upload-area .label-sub { color: var(--text-2); font-size: 11px; margin-top: 2px; }
-    
-    .upload-area.tem-arquivo { border-color: var(--success); background: var(--success-light); }
-    .upload-area.tem-arquivo .upload-icon, 
-    .upload-area.tem-arquivo .label-main { color: var(--success); }
-
-    /* ── Botões ──────────────────────────────────── */
-    .btn-row { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 8px; }
-
-    .btn {
-      padding: 9px 12px;
+    .btn-save {
+      flex: 2;
+      background: var(--green);
+      color: #fff;
+      border: none;
       border-radius: var(--radius-md);
-      font-size: 13px;
-      font-weight: 600;
-      font-family: inherit;
+      padding: 10px;
+      font-size: 13px; font-weight: 600; font-family: inherit;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: background .15s, opacity .15s;
+      transition: background .15s ease;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
     }
+    .btn-save:hover { background: var(--green-dark); }
+    .btn-save:disabled { background: var(--text-3); cursor: not-allowed; }
 
-    .btn:disabled { opacity: .6; cursor: not-allowed; }
-    
-    .btn-primary { width: 100%; color: #fff; background: var(--brand); border: none; }
-    .btn-primary:hover:not(:disabled) { background: var(--brand-dark); }
-    
-    .btn-secondary { color: var(--text-2); background: none; border: 0.5px solid var(--border-med); }
-    .btn-secondary:hover { background: var(--surface2); }
-    
-    .btn-outline { color: var(--brand); background: none; border: 0.5px solid var(--border-med); }
-    .btn-outline:hover { background: var(--brand-light); border-color: var(--brand); }
-
-    .spinner {
-      width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,.35);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin .7s linear infinite;
+    /* ── Toast Feedback ──────────────────────────── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #1C1C1E; color: #fff;
+      padding: 10px 20px; border-radius: 99px;
+      font-size: 13px; font-weight: 500;
+      opacity: 0; pointer-events: none;
+      box-shadow: var(--shadow-md);
+      transition: opacity .2s ease, bottom .2s ease;
+      z-index: 500;
     }
+    .toast.show { opacity: 1; bottom: 32px; }
+
+    /* ── Loader Inicial ──────────────────────────── */
+    .loader {
+      text-align: center; padding: 80px 20px;
+      color: var(--text-2); font-size: 14px; font-weight: 500;
+    }
+    .loader i { font-size: 32px; display: block; margin-bottom: 12px; color: var(--green); animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Alertas e Mensagens ──────────────────────── */
-    .alert {
-      margin-bottom: 16px;
-      padding: 10px 14px;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      border: 0.5px solid transparent;
-    }
-    .alert-error { background: var(--danger-light); color: var(--danger); border-color: rgba(229, 57, 53, 0.2); }
-    .alert-success { background: var(--success-light); color: var(--success); border-color: rgba(15, 157, 88, 0.2); }
-    .alert i { font-size: 16px; }
-
-    /* ── Tela de Sucesso ─────────────────────────── */
-    .success-screen { text-align: center; padding: 10px 0; }
-    .success-icon { width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 12px; color: #fff; background: var(--success); display: flex; align-items: center; justify-content: center; font-size: 24px; }
-    .success-screen h3 { color: var(--text); font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-    .success-screen p { color: var(--text-2); font-size: 13px; line-height: 1.4; margin-bottom: 8px; }
-
-    .notice {
-      margin: 14px 0;
-      padding: 10px 12px;
-      border-radius: var(--radius-md);
-      background: var(--warning-light);
-      color: var(--warning);
-      border: 0.5px solid rgba(245, 124, 0, 0.2);
-      font-size: 12px;
-      line-height: 1.4;
-      text-align: left;
-    }
-
-    .success-detail {
-      margin: 16px 0;
-      padding: 14px;
-      border-radius: var(--radius-md);
-      background: var(--surface2);
-      border: 0.5px solid var(--border);
-      text-align: left;
-    }
-    .success-detail dl { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
-    .success-detail dt { color: var(--text-2); font-size: 11px; font-weight: 600; text-transform: uppercase; }
-    .success-detail dd { color: var(--text); font-size: 13px; font-weight: 500; word-break: break-word; }
-
-    footer {
-      color: var(--text-3);
-      text-align: center;
-      padding: 20px;
-      font-size: 12px;
-      border-top: 0.5px solid var(--border);
-      background: var(--surface);
-      margin-top: auto;
-    }
-
-    /* ── Customizações Controladas do Flatpickr ────── */
-    .flatpickr-calendar input, .flatpickr-calendar select { width: auto; min-height: 0; height: auto; padding: 0; border: 0; background: transparent; box-shadow: none; font: inherit; }
-    .flatpickr-current-month { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; }
-    .flatpickr-current-month .flatpickr-monthDropdown-months, .flatpickr-current-month input.cur-year { color: var(--text); font-weight: 600; font-size: 13px; }
-    .flatpickr-calendar { font-family: inherit; border: 0.5px solid var(--border-med); box-shadow: var(--shadow-md); border-radius: var(--radius-lg); }
-    .flatpickr-day.selected, .flatpickr-day.selected:hover { background: var(--brand); border-color: var(--brand); }
-    .flatpickr-day:hover { background: var(--brand-light); border-color: var(--brand-light); color: var(--brand-dark); }
-    span.flatpickr-weekday { color: var(--text-2); font-weight: 600; }
-
-    /* ── Responsividade Adaptada ──────────────────── */
-    @media (max-width: 768px) {
-      .main { grid-template-columns: 1fr; }
-      .steps { grid-template-columns: 1fr; }
-      .grid-2, .btn-row, .success-detail dl { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
 
+<!-- Header -->
 <div class="header">
-  <img class="brand-logo" src="imagens/Distribuidora_KEM.png" alt="KEM - Distribuidora de Alimentos">
+  <div class="header-logo"><i class="ti ti-layout-grid"></i></div>
   <div class="header-info">
-    <h1>Portal de Entregas</h1>
-    <p>Agendamento de recebimento de mercadorias</p>
+    <h1>Painel de Planilhas</h1>
+    <p>Selecione um setor corporativo para gerenciar os documentos</p>
   </div>
 </div>
 
-<main class="main">
-  <section class="intro" aria-label="Resumo do portal">
-    <div class="eyebrow"><i class="ti ti-calendar-time"></i> Agendamento online</div>
-    <h2>Agende sua entrega.</h2>
-    <p>Preencha os dados da nota e anexe o XML e o DANFE para análise do recebimento.</p>
-    
-    <div class="support-list">
-      <div class="support-item">
-        <i class="ti ti-clock"></i>
-        <span>Escolha 2 horários: o recebimento aprova um deles.</span>
-      </div>
-      <div class="support-item">
-        <i class="ti ti-mail-check"></i>
-        <span>A aprovação ou reprovação é enviada para o e-mail informado.</span>
-      </div>
-      <div class="support-item">
-        <i class="ti ti-wallet"></i>
-        <span><strong>Descarga paletizada: R$ 20,00 cada palete</strong>, pago no local em dinheiro ou Pix.</span>
-      </div>
+<!-- Conteúdo principal -->
+<div class="main" id="main">
+  <div class="loader" id="loader">
+    <i class="ti ti-loader-2"></i>
+    Carregando painel de setores…
+  </div>
+</div>
+
+<!-- Modal de cadastro -->
+<div class="modal-bg" id="modal" onclick="handleModalBg(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+    <div class="modal-header">
+      <h2 id="modal-heading">Adicionar planilha</h2>
+      <p id="modal-sub">Setor selecionado</p>
     </div>
-  </section>
-
-  <section class="card" x-data="agendamento()" x-init="init()">
-    <!-- Progresso das etapas -->
-    <div class="steps" x-show="!concluido">
-      <div class="step" :class="{ active: etapa === 1, done: etapa > 1 }">
-        <div class="step-num" x-html="etapa > 1 ? '<i class=&quot;ti ti-check&quot;></i>' : '1'"></div>
-        <span>Dados</span>
-      </div>
-      <div class="step" :class="{ active: etapa === 2, done: etapa > 2 }">
-        <div class="step-num" x-html="etapa > 2 ? '<i class=&quot;ti ti-check&quot;></i>' : '2'"></div>
-        <span>Horário</span>
-      </div>
-      <div class="step" :class="{ active: etapa === 3 }">
-        <div class="step-num">3</div>
-        <span>Arquivos</span>
-      </div>
+    <div class="field">
+      <label for="inp-name">Nome da planilha *</label>
+      <input id="inp-name" placeholder="Ex: Relatório de fechamento mensal" autocomplete="off" />
     </div>
-
-    <!-- Alertas dinâmicos -->
-    <div class="alert" :class="alerta.tipo === 'erro' ? 'alert-error' : 'alert-success'" x-show="alerta.msg" x-transition>
-      <i :class="alerta.tipo === 'erro' ? 'ti ti-alert-circle' : 'ti ti-check-circle'"></i>
-      <span x-text="alerta.msg"></span>
+    <div class="field">
+      <label for="inp-url">Link do Google Sheets *</label>
+      <input id="inp-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/…" autocomplete="off" />
     </div>
-
-    <!-- ETAPA 1: Dados -->
-    <div x-show="etapa === 1 && !concluido" x-transition>
-      <div class="section-title"><i class="ti ti-building"></i> Dados do fornecedor</div>
-
-      <div class="form-group">
-        <label>Razão social *</label>
-        <input type="text" x-model="form.fornecedor" placeholder="Razão social ou nome fantasia">
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label>CNPJ *</label>
-          <input type="text" x-model="form.cnpj" @input="formatarCNPJ($event)" maxlength="18" placeholder="00.000.000/0000-00">
-        </div>
-        <div class="form-group">
-          <label>Nº da nota *</label>
-          <input type="text" x-model="form.nota" placeholder="Ex: 001234">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>E-mail *</label>
-        <input type="email" x-model="form.email" placeholder="email@fornecedor.com.br">
-      </div>
-
-      <button class="btn btn-primary" @click="irParaEtapa2()">
-        Próximo <i class="ti ti-arrow-right"></i>
+    <div class="field">
+      <label for="inp-desc">Descrição <span style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
+      <input id="inp-desc" placeholder="Ex: Atualizado todas as segundas-feiras" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label for="inp-pass">Senha para exclusão *</label>
+      <input id="inp-pass" type="text" placeholder="Crie uma senha de acesso rápido" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-save" id="btn-save" onclick="salvarPlanilha()">
+        <i class="ti ti-check"></i> Salvar
       </button>
     </div>
+  </div>
+</div>
 
-    <!-- ETAPA 2: Horários -->
-    <div x-show="etapa === 2 && !concluido" x-transition>
-      <div class="section-title"><i class="ti ti-calendar"></i> Data e horário de entrega</div>
-
-      <div class="form-group">
-        <label>Data da entrega *</label>
-        <input type="text" id="dataPicker" readonly placeholder="Selecione uma data">
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label>1º horário *</label>
-          <select x-show="!form.data || carregandoHorarios || horarios.length === 0" disabled>
-            <option x-text="carregandoHorarios ? 'Carregando...' : (form.data ? 'Indisponível' : 'Selecione a data')"></option>
-          </select>
-
-          <select x-show="form.data && !carregandoHorarios && horarios.length > 0" x-model="form.horario">
-            <option value="">Selecione o horário</option>
-            <optgroup label="Manhã">
-              <template x-for="h in horariosManha" :key="h">
-                <option :value="h" x-text="h" :disabled="h === form.horario2"></option>
-              </template>
-            </optgroup>
-            <optgroup label="Tarde">
-              <template x-for="h in horariosTarde" :key="h">
-                <option :value="h" x-text="h" :disabled="h === form.horario2"></option>
-              </template>
-            </optgroup>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>2º horário (alternativa) *</label>
-          <select x-show="!form.data || carregandoHorarios || horarios.length === 0" disabled>
-            <option x-text="carregandoHorarios ? 'Carregando...' : (form.data ? 'Indisponível' : 'Selecione a data')"></option>
-          </select>
-
-          <select x-show="form.data && !carregandoHorarios && horarios.length > 0" x-model="form.horario2">
-            <option value="">Selecione o horário</option>
-            <optgroup label="Manhã">
-              <template x-for="h in horariosManha" :key="h">
-                <option :value="h" x-text="h" :disabled="h === form.horario"></option>
-              </template>
-            </optgroup>
-            <optgroup label="Tarde">
-              <template x-for="h in horariosTarde" :key="h">
-                <option :value="h" x-text="h" :disabled="h === form.horario"></option>
-              </template>
-            </optgroup>
-          </select>
-        </div>
-      </div>
-
-      <p class="helper-text" x-show="form.data && !carregandoHorarios && horarios.length > 0">
-        <i class="ti ti-info-circle"></i> Escolha 2 horários diferentes para avaliação.
-      </p>
-
-      <div class="btn-row">
-        <button class="btn btn-secondary" @click="etapa = 1"><i class="ti ti-arrow-left"></i> Voltar</button>
-        <button class="btn btn-primary" @click="irParaEtapa3()">Próximo <i class="ti ti-arrow-right"></i></button>
-      </div>
+<!-- Modal remover -->
+<div class="modal-bg" id="modal-remove" onclick="handleRemoveBg(event)">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <h2>Excluir planilha</h2>
+      <p>Confirme a senha de segurança cadastrada para prosseguir</p>
     </div>
+    <div class="field">
+      <label for="remove-pass">Senha de exclusão</label>
+      <input id="remove-pass" type="text" placeholder="Digite a senha deste documento" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="fecharRemove()">Cancelar</button>
+      <button class="btn-save" style="background:#E53935" onclick="removerConfirmado()">
+        <i class="ti ti-trash"></i> Excluir
+      </button>
+    </div>
+  </div>
+</div>
 
-    <!-- ETAPA 3: Documentos -->
-    <div x-show="etapa === 3 && !concluido" x-transition>
-      <div class="section-title"><i class="ti ti-paperclip"></i> Documentos da nota</div>
+<!-- Toast de feedback -->
+<div class="toast" id="toast"></div>
 
-      <div class="form-group">
-        <label>XML da nota fiscal *</label>
-        <div class="upload-area" :class="{ 'tem-arquivo': form.xmlFile }">
-          <input type="file" accept=".xml" @change="selecionarArquivo($event, 'xml')">
-          <div>
-            <div class="upload-icon">
-              <i :class="form.xmlFile ? 'ti ti-file-check' : 'ti ti-upload'"></i>
-            </div>
-            <div class="label-main" x-text="form.xmlFile ? form.xmlFile.name : 'Clique para selecionar o XML'"></div>
-            <div class="label-sub" x-text="form.xmlFile ? formatarTamanho(form.xmlFile.size) : 'Máximo 10 MB'"></div>
+<script>
+// ── Estado do Aplicativo ──────────────────────────────────
+let dados = {};
+let setorAtivo = null;
+let setoresAbertos = new Set();
+
+// Dicionário de ícones e mapeamento de estilos de cor
+const META = {
+  "Transporte": { icon: "ti-truck", cls: "icon-log" },
+  "Operacional": { icon: "ti-settings", cls: "icon-com" },
+  "Faturamento": { icon: "ti-receipt", cls: "icon-fat" },
+  "RH/DP": { icon: "ti-users", cls: "icon-rh" },
+  "Comercial": { icon: "ti-presentation-analytics", cls: "icon-cmr" },
+  "Financeiro": { icon: "ti-wallet", cls: "icon-fin" },
+  "ADM": { icon: "ti-building-skyscraper", cls: "icon-com" }
+};
+
+// ── Ciclo de Inicialização ────────────────────────────────
+window.addEventListener('DOMContentLoaded', carregarDados);
+
+function carregarDados() {
+  google.script.run
+    .withSuccessHandler(onDadosCarregados)
+    .withFailureHandler(onErro)
+    .getTodasPlanilhas();
+}
+
+function onDadosCarregados(resultado) {
+  dados = resultado;
+  renderizar();
+}
+
+// ── Renderização Dinâmica ─────────────────────────────────
+function renderizar() {
+  const main = document.getElementById('main');
+  const setores = Object.keys(dados);
+
+  if (!setores.length) {
+    main.innerHTML = '<p style="color:var(--text-3);padding:40px;text-align:center;font-size:13px;">Nenhum setor encontrado na base de dados.</p>';
+    return;
+  }
+
+  main.innerHTML = setores.map(setor => {
+    const planilhas = dados[setor] || [];
+    const meta = META[setor] || { icon: "ti-folder", cls: "icon-com" };
+    const aberto = setoresAbertos.has(setor);
+
+    return `
+      <div class="sector${aberto ? ' open' : ''}" data-setor="${esc(setor)}">
+        <div class="sector-header" onclick="toggleSetor('${esc(setor)}')">
+          <div class="sector-icon ${meta.cls}">
+            <i class="ti ${meta.icon}" aria-hidden="true"></i>
           </div>
+          <span class="sector-name">${esc(setor)}</span>
+          <span class="sector-badge">${planilhas.length} planilha${planilhas.length !== 1 ? 's' : ''}</span>
+          <i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
+        </div>
+
+        <div class="sector-body">
+          ${planilhas.length === 0
+            ? `<div class="empty-state">
+                <i class="ti ti-database-off"></i>
+                Nenhuma planilha cadastrada neste setor
+              </div>`
+            : ''}
+          <div class="cards-grid">
+            ${planilhas.map(p => cardHTML(p)).join('')}
+          </div>
+          <button class="btn-add" onclick="abrirModal('${esc(setor)}')">
+            <i class="ti ti-plus" aria-hidden="true"></i>
+            Adicionar planilha
+          </button>
         </div>
       </div>
+    `;
+  }).join('');
+}
 
-      <div class="form-group">
-        <label>PDF da nota fiscal / DANFE *</label>
-        <div class="upload-area" :class="{ 'tem-arquivo': form.pdfFile }">
-          <input type="file" accept=".pdf" @change="selecionarArquivo($event, 'pdf')">
-          <div>
-            <div class="upload-icon">
-              <i :class="form.pdfFile ? 'ti ti-file-check' : 'ti ti-upload'"></i>
-            </div>
-            <div class="label-main" x-text="form.pdfFile ? form.pdfFile.name : 'Clique para selecionar o PDF'"></div>
-            <div class="label-sub" x-text="form.pdfFile ? formatarTamanho(form.pdfFile.size) : 'Máximo 10 MB'"></div>
-          </div>
-        </div>
+function cardHTML(p) {
+  return `
+    <div class="card">
+      <div class="card-top">
+        <div class="card-gs-icon" title="Google Sheets"></div>
+        <span class="card-title">${esc(p.nome)}</span>
       </div>
-
-      <div class="btn-row">
-        <button class="btn btn-secondary" @click="etapa = 2"><i class="ti ti-arrow-left"></i> Voltar</button>
-        <button class="btn btn-primary" @click="salvar()" :disabled="salvando">
-          <span class="spinner" x-show="salvando"></span>
-          <span x-text="salvando ? 'Enviando...' : 'Confirmar agendamento'"></span>
+      ${p.descricao ? `<div class="card-desc">${esc(p.descricao)}</div>` : ''}
+      <div class="card-actions">
+        <button class="btn-open" onclick="abrirLink('${esc(p.url)}')">
+          <i class="ti ti-external-link" aria-hidden="true"></i> Abrir
+        </button>
+        <button class="btn-del" onclick="confirmarRemocao('${esc(p.id)}')" title="Remover planilha">
+          <i class="ti ti-trash" aria-hidden="true"></i>
         </button>
       </div>
     </div>
+  `;
+}
 
-    <!-- TELA DE CONCLUSÃO -->
-    <div x-show="concluido" x-transition class="success-screen">
-      <div class="success-icon"><i class="ti ti-confetti"></i></div>
-      <h3>Solicitação enviada</h3>
-      <p>Seu agendamento foi encaminhado para análise do setor de recebimento.</p>
+// ── Controle das Gavetas (Collapse) ───────────────────────
+function toggleSetor(setor) {
+  if (setoresAbertos.has(setor)) {
+    setoresAbertos.delete(setor);
+  } else {
+    setoresAbertos.add(setor);
+  }
+  const el = document.querySelector(`.sector[data-setor="${setor}"]`);
+  if (el) el.classList.toggle('open');
+}
 
-      <div class="notice">
-        <strong>Aviso:</strong> Verifique sua pasta de Spam. Caso encontre nosso retorno lá, marque-o como seguro.
-      </div>
+// ── Controle de Modais ────────────────────────────────────
+function abrirModal(setor) {
+  document.getElementById('inp-pass').value = '';
+  setorAtivo = setor;
+  document.getElementById('modal-sub').textContent = '📂 Setor: ' + setor;
+  document.getElementById('inp-name').value = '';
+  document.getElementById('inp-url').value  = '';
+  document.getElementById('inp-desc').value = '';
+  document.getElementById('btn-save').disabled = false;
+  document.getElementById('modal').classList.add('show');
+  setTimeout(() => document.getElementById('inp-name').focus(), 120);
+}
 
-      <div class="success-detail">
-        <dl>
-          <dt>Fornecedor</dt><dd x-text="form.fornecedor"></dd>
-          <dt>CNPJ</dt><dd x-text="form.cnpj"></dd>
-          <dt>Data</dt><dd x-text="dataFormatadaDisplay()"></dd>
-          <dt>Horários</dt><dd x-text="form.horario + ' ou ' + form.horario2"></dd>
-          <dt>Nota fiscal</dt><dd x-text="form.nota"></dd>
-        </dl>
-      </div>
-      <button class="btn btn-outline" @click="reiniciar()"><i class="ti ti-plus"></i> Novo agendamento</button>
-    </div>
-  </section>
-</main>
+function fecharModal() {
+  document.getElementById('modal').classList.remove('show');
+  setorAtivo = null;
+}
 
-<footer>Portal de Agendamento de Entregas | Área de Recebimento</footer>
+function handleModalBg(e) {
+  if (e.target === document.getElementById('modal')) fecharModal();
+}
 
-<script>
-const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbwQh3K2axSa1T1qgCFJe0eWL3N2yqx9qsdyo3dQ-UCynJZ5IuK6KY7oMsvGtxiyDNgOpg/exec";
+// ── Persistência de Dados (Criar) ─────────────────────────
+function salvarPlanilha() {
+  const nome  = document.getElementById('inp-name').value.trim();
+  const url   = document.getElementById('inp-url').value.trim();
+  const desc  = document.getElementById('inp-desc').value.trim();
+  const senha = document.getElementById('inp-pass').value.trim();
 
-function agendamento() {
-  return {
-    etapa: 1,
-    concluido: false,
-    salvando: false,
-    carregandoHorarios: false,
-    horarios: [],
-    horariosManha: [],
-    horariosTarde: [],
-    alerta: { msg: '', tipo: '' },
+  if (!nome) {
+    mostrarToast('⚠️ Defina um nome para a planilha.');
+    return;
+  }
+  if (!url || !url.startsWith('http')) {
+    mostrarToast('⚠️ Insira uma URL válida do Google Sheets.');
+    return;
+  }
+  if (!senha || senha.length < 4) {
+    mostrarToast('⚠️ A senha de segurança deve conter no mínimo 4 caracteres.');
+    return;
+  }
 
-    form: {
-      fornecedor: '', cnpj: '', email: '', nota: '',
-      data: '', horario: '', horario2: '', xmlFile: null, pdfFile: null
-    },
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Salvando…';
 
-    init() {
-      this.$nextTick(() => {
-        flatpickr('#dataPicker', {
-          locale: 'pt',
-          minDate: 'today',
-          disable: [d => d.getDay() === 0 || d.getDay() === 6],
-          dateFormat: 'Y-m-d',
-          altInput: true,
-          altFormat: 'd/m/Y',
-          onChange: (selectedDates, dateStr) => {
-            this.form.data = dateStr;
-            this.form.horario = '';
-            this.form.horario2 = '';
-            this.carregarHorarios(dateStr);
-          }
-        });
-      });
-    },
+  google.script.run
+    .withSuccessHandler(onSalvo)
+    .withFailureHandler(onErro)
+    .adicionarPlanilha(setorAtivo, nome, url, desc, senha);
+}
 
-    async chamarAPI(action, paramData = {}) {
-      const response = await fetch(URL_APPS_SCRIPT, {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ action: action, data: paramData })
-      });
-      return await response.json();
-    },
+function onSalvo(res) {
+  fecharModal();
+  mostrarToast('✅ Planilha registrada com sucesso!');
+  carregarDados();
+}
 
-    mostrarAlerta(msg, tipo = 'erro') {
-      this.alerta = { msg, tipo };
-      setTimeout(() => { this.alerta.msg = ''; }, 5000);
-    },
+// ── Exclusão de Itens ─────────────────────────────────────
+let idRemocao = null;
 
-    irParaEtapa2() {
-      if (!this.form.fornecedor.trim()) return this.mostrarAlerta('Informe o nome do fornecedor.');
-      const cnpjNum = this.form.cnpj.replace(/\D/g, '');
-      if (cnpjNum.length !== 14) return this.mostrarAlerta('CNPJ inválido. Digite os 14 dígitos.');
-      if (!this.form.nota.trim()) return this.mostrarAlerta('Informe o número da Nota Fiscal.');
-      const email = this.form.email.trim();
-      if (!email) return this.mostrarAlerta('Informe o e-mail.');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return this.mostrarAlerta('E-mail inválido.');
-      this.alerta.msg = '';
-      this.etapa = 2;
-    },
+function confirmarRemocao(id) {
+  idRemocao = id;
+  document.getElementById('remove-pass').value = '';
+  document.getElementById('modal-remove').classList.add('show');
+  setTimeout(() => document.getElementById('remove-pass').focus(), 120);
+}
 
-    irParaEtapa3() {
-      if (!this.form.data) return this.mostrarAlerta('Selecione uma data.');
-      if (this.horarios.length < 2) return this.mostrarAlerta('Esta data não tem horários suficientes disponíveis.');
-      if (!this.form.horario) return this.mostrarAlerta('Selecione o 1º horário.');
-      if (!this.form.horario2) return this.mostrarAlerta('Selecione o 2º horário.');
-      if (this.form.horario === this.form.horario2) return this.mostrarAlerta('Os horários devem ser diferentes.');
-      this.alerta.msg = '';
-      this.etapa = 3;
-    },
+function fecharRemove() {
+  document.getElementById('modal-remove').classList.remove('show');
+  idRemocao = null;
+}
 
-    carregarHorarios(data) {
-      this.carregandoHorarios = true;
-      this.horarios = [];
-      this.horariosManha = [];
-      this.horariosTarde = [];
+function handleRemoveBg(e) {
+  if (e.target === document.getElementById('modal-remove')) fecharRemove();
+}
 
-      this.chamarAPI('obterHorariosDisponiveis', { data: data })
-        .then(h => {
-          this.horarios = h || [];
-          this.horariosManha = this.horarios.filter(h => parseInt(h.split(':')[0]) < 12);
-          this.horariosTarde = this.horarios.filter(h => parseInt(h.split(':')[0]) >= 12);
-          this.carregandoHorarios = false;
-        })
-        .catch(() => {
-          this.carregandoHorarios = false;
-          this.mostrarAlerta('Erro ao carregar horários. Tente novamente.');
-        });
-    },
+function removerConfirmado() {
+  const senha = document.getElementById('remove-pass').value.trim();
+  if (!senha) {
+    mostrarToast('⚠️ Digite a senha para confirmar a exclusão.');
+    return;
+  }
 
-    selecionarArquivo(event, tipo) {
-      const file = event.target.files[0];
-      if (!file) return;
-      if (file.size > 10 * 1024 * 1024) {
-        this.mostrarAlerta(`O arquivo ${tipo.toUpperCase()} deve ter no máximo 10 MB.`);
-        event.target.value = '';
-        return;
-      }
-      if (tipo === 'xml') this.form.xmlFile = file;
-      if (tipo === 'pdf') this.form.pdfFile = file;
-    },
+  google.script.run
+    .withSuccessHandler(() => {
+      fecharRemove();
+      mostrarToast('🗑️ Planilha removida permanentemente.');
+      carregarDados();
+    })
+    .withFailureHandler(onErro)
+    .removerPlanilha(idRemocao, senha);
+}
 
-    formatarTamanho(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-    },
+// ── Utilitários Auxiliares ────────────────────────────────
+function abrirLink(url) {
+  window.open(url, '_blank');
+}
 
-    formatarCNPJ(event) {
-      let v = event.target.value.replace(/\D/g, '').substring(0, 14);
-      if (v.length > 12) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*/, '$1.$2.$3/$4-$5');
-      else if (v.length > 8) v = v.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*/, '$1.$2.$3/$4');
-      else if (v.length > 5) v = v.replace(/^(\d{2})(\d{3})(\d{0,3}).*/, '$1.$2.$3');
-      else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3}).*/, '$1.$2');
-      this.form.cnpj = v;
-    },
+function esc(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
 
-    dataFormatadaDisplay() {
-      if (!this.form.data) return '';
-      const [y, m, d] = this.form.data.split('-');
-      return `${d}/${m}/${y}`;
-    },
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
 
-    async salvar() {
-      if (!this.form.xmlFile) return this.mostrarAlerta('Selecione o arquivo XML.');
-      if (!this.form.pdfFile) return this.mostrarAlerta('Selecione o arquivo PDF.');
-
-      this.salvando = true;
-      this.alerta.msg = '';
-
-      try {
-        const [xmlBase64, pdfBase64] = await Promise.all([
-          this.fileToBase64(this.form.xmlFile),
-          this.fileToBase64(this.form.pdfFile)
-        ]);
-
-        const dadosPayload = {
-          fornecedor: this.form.fornecedor.trim(),
-          cnpj: this.form.cnpj.trim(),
-          email: this.form.email.trim(),
-          nota: this.form.nota.trim(),
-          data: this.form.data,
-          horario: this.form.horario,
-          horario2: this.form.horario2,
-          xmlNome: this.form.xmlFile.name,
-          xmlConteudo: xmlBase64,
-          pdfNome: this.form.pdfFile.name,
-          pdfConteudo: pdfBase64
-        };
-
-        this.chamarAPI('salvarAgendamento', dadosPayload)
-          .then(res => {
-            this.salvando = false;
-            if (res.ok) {
-              this.concluido = true;
-            } else {
-              this.mostrarAlerta(res.msg);
-            }
-          })
-          .catch(() => {
-            this.salvando = false;
-            this.mostrarAlerta('Erro ao comunicar com o servidor.');
-          });
-      } catch (e) {
-        this.salvando = false;
-        this.mostrarAlerta('Erro ao processar os arquivos.');
-      }
-    },
-
-    fileToBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    },
-
-    reiniciar() {
-      this.form = {
-        fornecedor: '', cnpj: '', email: '', nota: '',
-        data: '', horario: '', horario2: '', xmlFile: null, pdfFile: null
-      };
-      this.horarios = [];
-      this.horariosManha = [];
-      this.horariosTarde = [];
-      this.concluido = false;
-      this.etapa = 1;
-      this.alerta.msg = '';
-
-      const picker = document.querySelector('#dataPicker');
-      const fp = picker && picker._flatpickr;
-      if (fp) fp.clear();
-    }
-  };
+function onErro(err) {
+  console.error(err);
+  mostrarToast('❌ Erro operacional: ' + (err.message || err));
+  const btn = document.getElementById('btn-save');
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-check"></i> Salvar';
+  }
 }
 </script>
 </body>
