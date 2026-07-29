@@ -1,249 +1,293 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <base target="_top">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Painel de Planilhas</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css" />
+  <title>KEM — Painel de Planilhas Corporativas</title>
+  
+  <!-- Fontes & Ícones do Padrão KEM -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
   <style>
-    /* ── Reset & Base Corporativo ─────────────────── */
+    /* ── Reset & Base Identity KEM ─────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --green:        #0F9D58;
-      --green-dark:   #0d8a4f;
-      --green-light:  #E8F5E9;
-      --bg:           #F5F5F5;
-      --surface:      #FFFFFF;
-      --surface2:     #FAFAFA;
-      --border:       rgba(0,0,0,.08);
-      --border-med:   rgba(0,0,0,.15);
-      --text:         #1C1C1E;
-      --text-2:       #5F5E5A;
-      --text-3:       #9E9D99;
-      --radius-md:    8px;
-      --radius-lg:    12px;
-      --shadow-sm:    0 1px 3px rgba(0,0,0,.05);
-      --shadow-md:    0 6px 20px rgba(0,0,0,.08);
-      
-      --c-log-bg: #FFF8E1; --c-log-txt: #B78103;
-      --c-com-bg: #F5F5F7; --c-com-txt: #455A64;
-      --c-fat-bg: #E3F2FD; --c-fat-txt: #1E88E5;
-      --c-rh-bg:  #F3E5F5; --c-rh-txt:  #8E24AA;
-      --c-cmr-bg: #E8F5E9; --c-cmr-txt: #2E7D32;
-      --c-fin-bg: #E0F2F1; --c-fin-txt: #00796B;
+      --brand: #024a70;
+      --brand-dark: #002a44;
+      --brand-soft: #e8f1f8;
+      --accent: #ee7a1c;
+      --accent-dark: #c5331b;
+      --accent-soft: #fdeede;
+      --wave: linear-gradient(90deg, var(--accent), var(--accent-dark));
+      --success: #16824a;
+      --success-soft: #e8f7ef;
+      --danger: #b42318;
+      --danger-soft: #fff0ee;
+      --ink: #172033;
+      --muted: #64748b;
+      --line: #dbe4ee;
+      --surface: #ffffff;
+      --canvas: #f6f8fb;
+      --radius: 8px;
+      --shadow: 0 18px 50px rgba(15, 35, 60, .12);
+      --shadow-sm: 0 4px 12px rgba(15, 35, 60, .04);
     }
 
     body {
-      font-family: 'Google Sans', 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      background: 
+        radial-gradient(circle at top left, rgba(238, 122, 28, .08), transparent 30%),
+        linear-gradient(180deg, #eef5fb 0%, var(--canvas) 38%, #fff 100%);
+      color: var(--ink);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Header ──────────────────────────────────── */
-    .header {
-      background: var(--surface);
-      border-bottom: 0.5px solid var(--border);
-      padding: 16px 24px;
+    /* ── Header Customizado KEM ─────────────────────── */
+    header {
+      min-height: 72px;
+      padding: 14px clamp(16px, 4vw, 40px);
       display: flex;
       align-items: center;
-      gap: 14px;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid rgba(219, 228, 238, .8);
+      background: rgba(255, 255, 255, .82);
+      backdrop-filter: blur(14px);
       position: sticky;
       top: 0;
       z-index: 50;
-      box-shadow: var(--shadow-sm);
     }
-    
-    .header-logo {
-      width: 36px; height: 36px;
-      background: var(--green-light);
-      border-radius: var(--radius-md);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--green); font-size: 20px;
+
+    header::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 3px;
+      background: var(--wave);
     }
-    
-    .header-info h1 { font-size: 16px; font-weight: 600; }
-    .header-info p  { font-size: 12px; color: var(--text-2); margin-top: 1px; }
 
-    /* ── Main & Setores ──────────────────────────── */
-    .main { padding: 24px 20px; max-width: 960px; margin: 0 auto; }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
+    .brand-logo {
+      height: 44px;
+      width: auto;
+      display: block;
+    }
+
+    .brand-text {
+      padding-left: 14px;
+      border-left: 1px solid var(--line);
+    }
+
+    header h1 { font-size: 1.1rem; font-weight: 800; color: var(--brand-dark); }
+    header p { color: var(--muted); font-size: .82rem; margin-top: 2px; }
+
+    /* ── Layout Principal ─────────────────────────── */
+    .main {
+      width: min(1000px, 100%);
+      margin: 0 auto;
+      padding: clamp(20px, 4vw, 40px) 16px;
+    }
+
+    /* ── Grid de Setores (Acordeon) ────────────────── */
     .sector {
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid rgba(219, 228, 238, .95);
+      border-radius: var(--radius);
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       box-shadow: var(--shadow-sm);
       transition: box-shadow .2s ease, border-color .2s ease;
     }
-    .sector.open { box-shadow: var(--shadow-md); border-color: var(--border-med); }
+    .sector.open { box-shadow: 0 10px 30px rgba(15, 35, 60, .06); border-color: #bde0f7; }
 
     .sector-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 14px 18px;
+      gap: 16px;
+      padding: 16px 20px;
       cursor: pointer;
       user-select: none;
       transition: background .15s ease;
     }
-    .sector-header:hover { background: var(--surface2); }
+    .sector-header:hover { background: var(--brand-soft); }
 
     .sector-icon {
-      width: 36px; height: 36px;
-      border-radius: var(--radius-md);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       flex-shrink: 0;
     }
     
-    .icon-log { background: var(--c-log-bg); color: var(--c-log-txt); }
-    .icon-com { background: var(--c-com-bg); color: var(--c-com-txt); }
-    .icon-fat { background: var(--c-fat-bg); color: var(--c-fat-txt); }
-    .icon-rh  { background: var(--c-rh-bg);  color: var(--c-rh-txt); }
-    .icon-cmr { background: var(--c-cmr-bg); color: var(--c-cmr-txt); }
-    .icon-fin { background: var(--c-fin-bg); color: var(--c-fin-txt); }
+    /* Cores de identificação corporativa sob o padrão KEM */
+    .icon-log { background: var(--brand-soft); color: var(--brand); }
+    .icon-com { background: var(--accent-soft); color: var(--accent-dark); }
+    .icon-fat { background: var(--success-soft); color: var(--success); }
+    .icon-rh  { background: #f3e8ff; color: #6b21a8; }
+    .icon-cmr { background: #fff7e6; color: #b7791f; }
+    .icon-fin { background: #e0f2f1; color: #00796b; }
 
-    .sector-name  { font-size: 14px; font-weight: 600; flex: 1; color: var(--text); }
+    .sector-name { font-size: 0.95rem; font-weight: 700; flex: 1; color: var(--ink); }
     
     .sector-badge {
-      font-size: 11px;
-      background: var(--green-light);
-      color: var(--green-dark);
-      padding: 3px 9px;
+      font-size: .78rem;
+      background: #fff;
+      color: var(--muted);
+      padding: 4px 10px;
       border-radius: 99px;
       font-weight: 600;
+      border: 1px solid var(--line);
     }
     
     .chevron {
-      font-size: 16px;
-      color: var(--text-3);
+      color: var(--muted);
       transition: transform .2s ease;
     }
-    .sector.open .chevron { transform: rotate(180deg); color: var(--text-2); }
+    .sector.open .chevron { transform: rotate(180deg); color: var(--brand); }
 
     .sector-body {
       display: none;
-      padding: 18px;
-      background: var(--surface2);
-      border-top: 0.5px solid var(--border);
+      padding: 20px;
+      background: #fcfdfe;
+      border-top: 1px solid var(--line);
     }
     .sector.open .sector-body { display: block; }
 
-    /* ── Grid de Cards ───────────────────────────── */
+    /* ── Grid de Documentos (Cards) ───────────────── */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 12px;
-      margin-bottom: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
     }
 
     .card {
       background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      box-shadow: var(--shadow-sm);
+      gap: 12px;
       transition: box-shadow .15s ease, border-color .15s ease, transform .15s ease;
     }
     .card:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-med);
-      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(15, 35, 60, .08);
+      border-color: #8fb6d4;
+      transform: translateY(-2px);
     }
 
-    .card-top { display: flex; gap: 10px; align-items: flex-start; }
+    .card-top { display: flex; gap: 12px; align-items: flex-start; }
     
     .card-gs-icon {
-      width: 26px; height: 26px;
+      width: 28px;
+      height: 28px;
       flex-shrink: 0;
-      background: url("https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico") center/cover;
-      border-radius: 4px;
+      background: var(--brand-soft) url("https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico") center/55% no-repeat;
+      border-radius: 6px;
+      border: 1px solid rgba(2, 74, 112, .15);
     }
     
     .card-title {
-      font-size: 13px; font-weight: 600;
-      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--ink);
       line-height: 1.4;
-      word-break: break-word;
     }
     
     .card-desc {
-      font-size: 11px;
-      color: var(--text-2);
-      line-height: 1.4;
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
     }
     
-    .card-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 4px; }
+    .card-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 6px; }
 
-    /* ── Botões ──────────────────────────────────── */
+    /* ── Componentes de Botões ────────────────────── */
     .btn-open {
       flex: 1;
-      background: var(--green);
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
       color: #fff;
       border: none;
-      border-radius: var(--radius-md);
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 600;
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      font-size: 0.82rem;
+      font-weight: 800;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: background .15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(2, 74, 112, .15);
+      transition: opacity .15s ease, transform .1s;
     }
-    .btn-open:hover { background: var(--green-dark); }
+    .btn-open:hover { opacity: 0.95; }
+    .btn-open:active { transform: scale(0.98); }
 
     .btn-del {
-      background: none;
-      border: 0.5px solid var(--border-med);
-      border-radius: var(--radius-md);
-      padding: 8px 10px;
-      font-size: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 9px 11px;
       cursor: pointer;
-      color: var(--text-3);
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color .15s ease, color .15s ease, background .15s ease;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s ease;
     }
-    .btn-del:hover { border-color: #E53935; color: #E53935; background: #FFEBEE; }
+    .btn-del:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-soft); }
 
     .btn-add {
       width: 100%;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      border: 0.5px dashed var(--border-med);
-      border-radius: var(--radius-md);
-      padding: 10px;
-      background: var(--surface);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1.5px dashed #b8c7d8;
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fff;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--brand-dark);
       cursor: pointer;
-      transition: background .15s ease, color .15s ease, border-color .15s ease;
       font-family: inherit;
+      transition: all .2s;
     }
     .btn-add:hover {
-      background: var(--green-light);
-      color: var(--green-dark);
-      border-color: var(--green);
+      background: var(--brand-soft);
+      border-color: var(--brand);
+      transform: translateY(-1px);
     }
 
     .empty-state {
       text-align: center;
-      padding: 24px 0;
-      color: var(--text-3);
-      font-size: 13px;
+      padding: 30px 0;
+      color: var(--muted);
+      font-size: 0.85rem;
     }
-    .empty-state i { font-size: 32px; display: block; margin-bottom: 8px; color: var(--text-3); }
+    .empty-state i { display: block; margin: 0 auto 10px; color: #cbd5e1; }
 
-    /* ── Modais ──────────────────────────────────── */
+    /* ── Modais Avançados ─────────────────────────── */
     .modal-bg {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,.35);
-      backdrop-filter: blur(2px);
+      background: rgba(15, 35, 60, .4);
+      backdrop-filter: blur(4px);
       display: none; align-items: center; justify-content: center;
       z-index: 200;
       padding: 16px;
@@ -252,132 +296,142 @@
 
     .modal {
       background: var(--surface);
-      border-radius: var(--radius-lg);
-      border: 0.5px solid var(--border-med);
-      padding: 24px;
-      width: 420px; max-width: 100%;
-      box-shadow: var(--shadow-md);
-      animation: pop .2s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      padding: 28px;
+      width: 440px; max-width: 100%;
+      box-shadow: var(--shadow);
+      animation: pop .25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     @keyframes pop {
-      from { opacity: 0; transform: scale(.96); }
-      to   { opacity: 1; transform: scale(1); }
+      from { opacity: 0; transform: scale(.95) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
     }
 
-    .modal-header { margin-bottom: 18px; }
-    .modal-header h2 { font-size: 16px; font-weight: 600; color: var(--text); }
-    .modal-header p  { font-size: 12px; color: var(--text-2); margin-top: 2px; font-weight: 500; }
+    .modal-header { margin-bottom: 20px; }
+    .modal-header h2 { font-size: 1.15rem; font-weight: 800; color: var(--ink); }
+    .modal-header p  { font-size: 0.82rem; color: var(--brand); margin-top: 4px; font-weight: 600; }
 
-    .field { margin-bottom: 14px; }
+    .field { margin-bottom: 16px; }
     .field label {
-      font-size: 11px; font-weight: 600;
-      color: var(--text-2); letter-spacing: .04em; text-transform: uppercase;
-      display: block; margin-bottom: 6px;
+      display: block;
+      margin-bottom: 7px;
+      color: #40516a;
+      font-size: .76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
     }
     .field input {
       width: 100%;
-      padding: 10px 12px;
-      border: 0.5px solid var(--border-med);
-      border-radius: var(--radius-md);
-      font-size: 13px;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
       font-family: inherit;
-      color: var(--text);
-      background: var(--surface2);
-      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      color: var(--ink);
+      background: #fbfdff;
+      outline: none;
+      transition: all .2s;
     }
     .field input:focus {
-      outline: none;
-      border-color: var(--green);
-      background: var(--surface);
-      box-shadow: 0 0 0 3px rgba(15,157,88,.12);
+      border-color: var(--brand);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(2, 74, 112, .12);
     }
-    .field input::placeholder { color: var(--text-3); }
+    .field input::placeholder { color: #94a3b8; }
 
-    .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+    .modal-actions { display: flex; gap: 12px; margin-top: 26px; }
     
     .btn-cancel {
       flex: 1;
-      border: 0.5px solid var(--border-med);
-      border-radius: var(--radius-md);
-      padding: 10px;
-      background: none;
-      font-size: 13px; font-family: inherit; font-weight: 600;
-      color: var(--text-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #eef3f7;
+      font-size: 0.85rem; font-family: inherit; font-weight: 800;
+      color: var(--ink);
       cursor: pointer;
       transition: background .15s ease;
     }
-    .btn-cancel:hover { background: var(--surface2); }
+    .btn-cancel:hover { background: #e2eaf1; }
 
     .btn-save {
       flex: 2;
-      background: var(--green);
+      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
       color: #fff;
       border: none;
-      border-radius: var(--radius-md);
-      padding: 10px;
-      font-size: 13px; font-weight: 600; font-family: inherit;
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 0.85rem; font-weight: 800; font-family: inherit;
       cursor: pointer;
-      transition: background .15s ease;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 8px 20px rgba(2, 74, 112, .2);
+      transition: opacity .15s ease;
     }
-    .btn-save:hover { background: var(--green-dark); }
-    .btn-save:disabled { background: var(--text-3); cursor: not-allowed; }
+    .btn-save:hover { opacity: 0.95; }
+    .btn-save:disabled { background: #cbd5e1; color: #94a3b8; box-shadow: none; cursor: not-allowed; }
 
-    /* ── Toast Feedback ──────────────────────────── */
+    /* ── Feedback Banner Toast ────────────────────── */
     .toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: #1C1C1E; color: #fff;
-      padding: 10px 20px; border-radius: 99px;
-      font-size: 13px; font-weight: 500;
+      background: var(--brand-dark); color: #fff;
+      padding: 12px 24px; border-radius: var(--radius);
+      font-size: 0.88rem; font-weight: 600;
       opacity: 0; pointer-events: none;
-      box-shadow: var(--shadow-md);
-      transition: opacity .2s ease, bottom .2s ease;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all .25s ease;
       z-index: 500;
+      display: inline-flex; align-items: center; gap: 8px;
     }
-    .toast.show { opacity: 1; bottom: 32px; }
+    .toast.show { opacity: 1; bottom: 36px; }
 
     /* ── Loader Inicial ──────────────────────────── */
     .loader {
       text-align: center; padding: 80px 20px;
-      color: var(--text-2); font-size: 14px; font-weight: 500;
+      color: var(--muted); font-size: 0.9rem; font-weight: 500;
     }
-    .loader i { font-size: 32px; display: block; margin-bottom: 12px; color: var(--green); animation: spin 1s linear infinite; }
+    .loader i { display: block; margin: 0 auto 14px; color: var(--brand); animation: spin .8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
 <!-- Header -->
-<div class="header">
-  <div class="header-logo"><i class="ti ti-layout-grid"></i></div>
-  <div class="header-info">
-    <h1>Painel de Planilhas</h1>
-    <p>Selecione um setor corporativo para gerenciar os documentos</p>
+<header>
+  <div class="brand">
+    <img class="brand-logo" src="imagens/Distribuidora_KEM.png" alt="Distribuidora KEM">
+    <div class="brand-text">
+      <h1>Painel de Planilhas</h1>
+      <p>Gerenciamento centralizado de documentos corporativos</p>
+    </div>
   </div>
-</div>
+</header>
 
-<!-- Conteúdo principal -->
+<!-- Conteúdo Principal -->
 <div class="main" id="main">
   <div class="loader" id="loader">
-    <i class="ti ti-loader-2"></i>
-    Carregando painel de setores…
+    <i data-lucide="loader-2" width="36" height="36"></i>
+    Carregando painel de setores institucional...
   </div>
 </div>
 
-<!-- Modal de cadastro -->
+<!-- Modal de Cadastro -->
 <div class="modal-bg" id="modal" onclick="handleModalBg(event)">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
     <div class="modal-header">
-      <h2 id="modal-heading">Adicionar planilha</h2>
+      <h2 id="modal-heading">Adicionar Documento</h2>
       <p id="modal-sub">Setor selecionado</p>
     </div>
     <div class="field">
       <label for="inp-name">Nome da planilha *</label>
-      <input id="inp-name" placeholder="Ex: Relatório de fechamento mensal" autocomplete="off" />
+      <input id="inp-name" placeholder="Ex: Relatório de Fechamento Mensal" autocomplete="off" />
     </div>
     <div class="field">
       <label for="inp-url">Link do Google Sheets *</label>
-      <input id="inp-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/…" autocomplete="off" />
+      <input id="inp-url" type="url" placeholder="https://docs.google.com/spreadsheets/d/..." autocomplete="off" />
     </div>
     <div class="field">
       <label for="inp-desc">Descrição <span style="font-weight:400;text-transform:none;letter-spacing:0">(opcional)</span></label>
@@ -385,22 +439,22 @@
     </div>
     <div class="field">
       <label for="inp-pass">Senha para exclusão *</label>
-      <input id="inp-pass" type="text" placeholder="Crie uma senha de acesso rápido" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      <input id="inp-pass" type="text" placeholder="Crie uma senha de segurança rápida" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
       <button class="btn-save" id="btn-save" onclick="salvarPlanilha()">
-        <i class="ti ti-check"></i> Salvar
+        <i data-lucide="check" width="16" height="16"></i> Salvar Registro
       </button>
     </div>
   </div>
 </div>
 
-<!-- Modal remover -->
+<!-- Modal Remover -->
 <div class="modal-bg" id="modal-remove" onclick="handleRemoveBg(event)">
   <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
-      <h2>Excluir planilha</h2>
+      <h2>Excluir Planilha</h2>
       <p>Confirme a senha de segurança cadastrada para prosseguir</p>
     </div>
     <div class="field">
@@ -409,14 +463,14 @@
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="fecharRemove()">Cancelar</button>
-      <button class="btn-save" style="background:#E53935" onclick="removerConfirmado()">
-        <i class="ti ti-trash"></i> Excluir
+      <button class="btn-save" style="background: var(--danger); box-shadow: 0 8px 20px rgba(180,35,24,0.2);" onclick="removerConfirmado()">
+        <i data-lucide="trash-2" width="16" height="16"></i> Confirmar Exclusão
       </button>
     </div>
   </div>
 </div>
 
-<!-- Toast de feedback -->
+<!-- Toast de Feedback -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -428,15 +482,23 @@ let dados = {};
 let setorAtivo = null;
 let setoresAbertos = new Set();
 
+// Mapeamento de Ícones Modernos (Lucide)
 const META = {
-  "Transporte": { icon: "ti-truck", cls: "icon-log" },
-  "Operacional": { icon: "ti-settings", cls: "icon-com" },
-  "Faturamento": { icon: "ti-receipt", cls: "icon-fat" },
-  "RH/DP": { icon: "ti-users", cls: "icon-rh" },
-  "Comercial": { icon: "ti-presentation-analytics", cls: "icon-cmr" },
-  "Financeiro": { icon: "ti-wallet", cls: "icon-fin" },
-  "ADM": { icon: "ti-building-skyscraper", cls: "icon-com" }
+  "Transporte": { icon: "truck", cls: "icon-log" },
+  "Operacional": { icon: "settings", cls: "icon-com" },
+  "Faturamento": { icon: "receipt", cls: "icon-fat" },
+  "RH/DP": { icon: "users", cls: "icon-rh" },
+  "Comercial": { icon: "presentation", cls: "icon-cmr" },
+  "Financeiro": { icon: "wallet", cls: "icon-fin" },
+  "ADM": { icon: "building-2", cls: "icon-com" }
 };
+
+// Renderização auxiliar para bibliotecas externas
+function renderIcons() {
+  if (window.lucide) {
+    setTimeout(() => lucide.createIcons(), 0);
+  }
+}
 
 // ── Motor de Comunicação com o Back ───────────────────────
 async function chamarAPI(action, paramData = {}) {
@@ -450,7 +512,9 @@ async function chamarAPI(action, paramData = {}) {
 }
 
 // ── Ciclo de Inicialização ────────────────────────────────
-window.addEventListener('DOMContentLoaded', carregarDados);
+window.addEventListener('DOMContentLoaded', () => {
+  carregarDados();
+});
 
 function carregarDados() {
   chamarAPI('getTodasPlanilhas')
@@ -469,44 +533,46 @@ function renderizar() {
   const setores = Object.keys(dados);
 
   if (!setores.length) {
-    main.innerHTML = '<p style="color:var(--text-3);padding:40px;text-align:center;font-size:13px;">Nenhum setor encontrado na base de dados.</p>';
+    main.innerHTML = '<p style="color:var(--muted);padding:40px;text-align:center;font-size:13px;">Nenhum setor encontrado na base de dados corporativa.</p>';
     return;
   }
 
   main.innerHTML = setores.map(setor => {
     const planilhas = dados[setor] || [];
-    const meta = META[setor] || { icon: "ti-folder", cls: "icon-com" };
+    const meta = META[setor] || { icon: "folder", cls: "icon-com" };
     const aberto = setoresAbertos.has(setor);
 
     return `
       <div class="sector${aberto ? ' open' : ''}" data-setor="${esc(setor)}">
         <div class="sector-header" onclick="toggleSetor('${esc(setor)}')">
           <div class="sector-icon ${meta.cls}">
-            <i class="ti ${meta.icon}" aria-hidden="true"></i>
+            <i data-lucide="${meta.icon}" width="18" height="18" aria-hidden="true"></i>
           </div>
           <span class="sector-name">${esc(setor)}</span>
           <span class="sector-badge">${planilhas.length} planilha${planilhas.length !== 1 ? 's' : ''}</span>
-          <i class="ti ti-chevron-down chevron" aria-hidden="true"></i>
+          <i data-lucide="chevron-down" class="chevron" width="16" height="16" aria-hidden="true"></i>
         </div>
 
         <div class="sector-body">
           ${planilhas.length === 0
             ? `<div class="empty-state">
-                <i class="ti ti-database-off"></i>
-                Nenhuma planilha cadastrada neste setor
+                <i data-lucide="database-backup" width="32" height="32"></i>
+                Nenhum documento anexado a este setor até o momento.
               </div>`
             : ''}
           <div class="cards-grid">
             ${planilhas.map(p => cardHTML(p)).join('')}
           </div>
           <button class="btn-add" onclick="abrirModal('${esc(setor)}')">
-            <i class="ti ti-plus" aria-hidden="true"></i>
-            Adicionar planilha
+            <i data-lucide="plus" width="16" height="16" aria-hidden="true"></i>
+            Adicionar nova planilha
           </button>
         </div>
       </div>
     `;
   }).join('');
+  
+  renderIcons();
 }
 
 function cardHTML(p) {
@@ -519,10 +585,10 @@ function cardHTML(p) {
       ${p.descricao ? `<div class="card-desc">${esc(p.descricao)}</div>` : ''}
       <div class="card-actions">
         <button class="btn-open" onclick="abrirLink('${esc(p.url)}')">
-          <i class="ti ti-external-link" aria-hidden="true"></i> Abrir
+          <i data-lucide="external-link" width="14" height="14" aria-hidden="true"></i> Acessar
         </button>
         <button class="btn-del" onclick="confirmarRemocao('${esc(p.id)}')" title="Remover planilha">
-          <i class="ti ti-trash" aria-hidden="true"></i>
+          <i data-lucide="trash-2" width="14" height="14" aria-hidden="true"></i>
         </button>
       </div>
     </div>
@@ -537,18 +603,20 @@ function toggleSetor(setor) {
   }
   const el = document.querySelector(`.sector[data-setor="${setor}"]`);
   if (el) el.classList.toggle('open');
+  renderIcons();
 }
 
 function abrirModal(setor) {
   document.getElementById('inp-pass').value = '';
-  setorAtivo = setor;
-  document.getElementById('modal-sub').textContent = '📂 Setor: ' + setor;
+  setorAtivo = sector = setor;
+  document.getElementById('modal-sub').textContent = 'Setor Selecionado: ' + setor;
   document.getElementById('inp-name').value = '';
   document.getElementById('inp-url').value  = '';
   document.getElementById('inp-desc').value = '';
   document.getElementById('btn-save').disabled = false;
   document.getElementById('modal').classList.add('show');
   setTimeout(() => document.getElementById('inp-name').focus(), 120);
+  renderIcons();
 }
 
 function fecharModal() {
@@ -566,13 +634,14 @@ function salvarPlanilha() {
   const desc  = document.getElementById('inp-desc').value.trim();
   const senha = document.getElementById('inp-pass').value.trim();
 
-  if (!nome) return mostrarToast('⚠️ Defina um nome para a planilha.');
-  if (!url || !url.startsWith('http')) return mostrarToast('⚠️ Insira uma URL válida do Google Sheets.');
-  if (!senha || senha.length < 4) return mostrarToast('⚠️ A senha de segurança deve conter no mínimo 4 caracteres.');
+  if (!nome) return mostrarToast('Informe o nome da planilha para continuar.');
+  if (!url || !url.startsWith('http')) return mostrarToast('Insira uma URL válida do Google Sheets.');
+  if (!senha || senha.length < 4) return mostrarToast('A senha de segurança deve conter no mínimo 4 caracteres.');
 
   const btn = document.getElementById('btn-save');
   btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 1s linear infinite"></i> Salvando…';
+  btn.innerHTML = '<i data-lucide="loader-2" style="animation:spin 1s linear infinite" width="16" height="16"></i> Salvando dados...';
+  renderIcons();
 
   chamarAPI('adicionarPlanilha', {
     setor: setorAtivo,
@@ -590,7 +659,7 @@ function salvarPlanilha() {
 
 function onSalvo(res) {
   fecharModal();
-  mostrarToast('✅ Planilha registrada com sucesso!');
+  mostrarToast('Planilha registrada com sucesso no sistema!');
   carregarDados();
 }
 
@@ -601,6 +670,7 @@ function confirmarRemocao(id) {
   document.getElementById('remove-pass').value = '';
   document.getElementById('modal-remove').classList.add('show');
   setTimeout(() => document.getElementById('remove-pass').focus(), 120);
+  renderIcons();
 }
 
 function fecharRemove() {
@@ -614,15 +684,15 @@ function handleRemoveBg(e) {
 
 function removerConfirmado() {
   const senha = document.getElementById('remove-pass').value.trim();
-  if (!senha) return mostrarToast('⚠️ Digite a senha para confirmar a exclusão.');
+  if (!senha) return mostrarToast('Digite a senha cadastrada para confirmar a exclusão.');
 
   chamarAPI('removerPlanilha', { id: idRemocao, senha: senha })
     .then(res => {
       if (res && res.error) {
-        mostrarToast('❌ ' + res.error);
+        mostrarToast('Erro de validação: ' + res.error);
       } else {
         fecharRemove();
-        mostrarToast('🗑️ Planilha removida permanentemente.');
+        mostrarToast('Planilha removida permanentemente do banco corporativo.');
         carregarDados();
       }
     })
@@ -642,17 +712,18 @@ function mostrarToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  setTimeout(() => t.classList.remove('show'), 4000);
 }
 
 function onErro(err) {
   console.error(err);
-  mostrarToast('❌ Erro operacional: ' + (err.message || err));
+  mostrarToast('Não foi possível processar a operação: ' + (err.message || err));
   const btn = document.getElementById('btn-save');
   if (btn) {
     btn.disabled = false;
-    btn.innerHTML = '<i class="ti ti-check"></i> Salvar';
+    btn.innerHTML = '<i data-lucide="check" width="16" height="16"></i> Salvar Registro';
   }
+  renderIcons();
 }
 </script>
 </body>
